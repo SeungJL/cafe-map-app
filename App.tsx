@@ -499,17 +499,87 @@ function Section({
     [],
   );
 
+  const extractBrowserFallbackUrl = (intentUrl: string) => {
+    // intent://...#Intent;...;S.browser_fallback_url=...;end
+    const m = intentUrl.match(/S\.browser_fallback_url=([^;]+)/);
+    if (!m?.[1]) return null;
+    try {
+      return decodeURIComponent(m[1]);
+    } catch {
+      return m[1];
+    }
+  };
+
+  const extractPackageFromIntent = (intentUrl: string) => {
+    const m = intentUrl.match(/package=([^;]+)/);
+    return m?.[1] ?? null;
+  };
+
+  const openAndroidIntentSafely = async (url: string) => {
+    // 1) intent://는 먼저 Linking.openURL 시도
+    try {
+      const can = await Linking.canOpenURL(url);
+      if (can) {
+        await Linking.openURL(url);
+        return true;
+      }
+    } catch {}
+
+    // 2) fallback url 있으면 그걸 열기
+    const fallback = extractBrowserFallbackUrl(url);
+    if (fallback) {
+      try {
+        await Linking.openURL(fallback);
+        return true;
+      } catch {}
+    }
+
+    // 3) package가 있으면 스토어로
+    const pkg = extractPackageFromIntent(url);
+    if (pkg) {
+      const market = `market://details?id=${pkg}`;
+      const web = `https://play.google.com/store/apps/details?id=${pkg}`;
+      try {
+        const canMarket = await Linking.canOpenURL(market);
+        await Linking.openURL(canMarket ? market : web);
+        return true;
+      } catch {}
+    }
+
+    return false;
+  };
   const onShouldStartLoadWithRequest = useCallback(
     (request: ShouldStartLoadRequest) => {
-      if (request.url.includes('youtube.com/watch')) {
-        Linking.openURL(request.url).catch(() => {});
+      const url = request.url || '';
+
+      // ✅ 외부로 보내야 하는 스킴들 (결제앱/카톡/스토어/intent)
+      const isExternalScheme =
+        url.startsWith('intent://') ||
+        url.startsWith('kakaotalk://') ||
+        url.startsWith('kakaopay://') ||
+        url.startsWith('market://') ||
+        url.startsWith('tel:') ||
+        url.startsWith('sms:');
+
+      if (isExternalScheme) {
+        if (Platform.OS === 'android' && url.startsWith('intent://')) {
+          openAndroidIntentSafely(url);
+        } else {
+          Linking.openURL(url).catch(() => {});
+        }
+        return false; // ✅ WebView가 로드하지 않게 막기
+      }
+
+      // 기존 유튜브 로직
+      if (url.includes('youtube.com/watch')) {
+        Linking.openURL(url).catch(() => {});
         return false;
       }
+
       return true;
     },
     [],
   );
-
   const handleFcmToken = useCallback(async () => {
     try {
       if (!messaging().isDeviceRegisteredForRemoteMessages) {
