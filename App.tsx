@@ -6,6 +6,7 @@ import {
   BackHandler,
   Linking,
   Modal,
+  NativeModules,
   Platform,
   Pressable,
   StatusBar,
@@ -37,7 +38,7 @@ import {
   requestNotifications,
   RESULTS,
 } from 'react-native-permissions';
-
+const {IntentModule} = NativeModules;
 /* ===========================
    Force Update Config
 =========================== */
@@ -548,13 +549,41 @@ function Section({
 
     return false;
   };
+
+  const EXTERNAL_PATH_PREFIXES = ['/register/access']; // 필요한 경로만 추가
+
+  const shouldOpenExternalForSameDomain = (rawUrl: string) => {
+    try {
+      const u = new URL(rawUrl);
+      const hostOk =
+        u.hostname === 'study-about.club' ||
+        u.hostname === 'www.study-about.club';
+      if (!hostOk) return false;
+
+      return EXTERNAL_PATH_PREFIXES.some(p => u.pathname.startsWith(p));
+    } catch {
+      return false;
+    }
+  };
+
   const onShouldStartLoadWithRequest = useCallback(
     (request: ShouldStartLoadRequest) => {
       const url = request.url || '';
 
-      // ✅ 외부로 보내야 하는 스킴들 (결제앱/카톡/스토어/intent)
+      // 0) ✅ 같은 도메인이어도 특정 경로는 외부 브라우저로 강제
+      if (shouldOpenExternalForSameDomain(url)) {
+        Linking.openURL(url).catch(() => {});
+        return false; // ✅ WebView 내부 이동 차단
+      }
+
+      // 1) Android intent:// 는 무조건 네이티브로 처리
+      if (Platform.OS === 'android' && url.startsWith('intent://')) {
+        IntentModule.openIntent(url).catch(() => {});
+        return false;
+      }
+
+      // 2) 기타 외부 스킴은 Linking으로
       const isExternalScheme =
-        url.startsWith('intent://') ||
         url.startsWith('kakaotalk://') ||
         url.startsWith('kakaopay://') ||
         url.startsWith('market://') ||
@@ -562,15 +591,11 @@ function Section({
         url.startsWith('sms:');
 
       if (isExternalScheme) {
-        if (Platform.OS === 'android' && url.startsWith('intent://')) {
-          openAndroidIntentSafely(url);
-        } else {
-          Linking.openURL(url).catch(() => {});
-        }
-        return false; // ✅ WebView가 로드하지 않게 막기
+        Linking.openURL(url).catch(() => {});
+        return false;
       }
 
-      // 기존 유튜브 로직
+      // 3) 기존 유튜브
       if (url.includes('youtube.com/watch')) {
         Linking.openURL(url).catch(() => {});
         return false;
