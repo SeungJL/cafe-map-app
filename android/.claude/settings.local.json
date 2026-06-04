@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Content \"C:\\\\Users\\\\user\\\\Desktop\\\\app\\\\cafe-map-app\\\\ios\\\\Podfile\" -Encoding UTF8 | ForEach-Object { $i++; \"${i}: $_\" })"
+    ]
+  }
+}
