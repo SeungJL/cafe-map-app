@@ -32,7 +32,7 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="about20s" />
+       <data android:scheme="kagongmap" />
       </intent-filter>
 
 <!-- study-about.club -->
@@ -60,7 +60,7 @@
 
 
       <!-- ✅ (추가) https://about20s.club/* 전부 앱이 가로채기 -->
-      <intent-filter android:autoVerify="true">
+      <!-- <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
@@ -68,10 +68,10 @@
           android:scheme="https"
           android:host="about20s.club"
           android:pathPrefix="/" />
-      </intent-filter>
+      </intent-filter> -->
 
       <!-- ✅ (추가) https://www.about20s.club/* 도 쓰면 이것도 -->
-      <intent-filter android:autoVerify="true">
+      <!-- <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
@@ -79,7 +79,7 @@
           android:scheme="https"
           android:host="www.about20s.club"
           android:pathPrefix="/" />
-      </intent-filter>
+      </intent-filter> -->
 
     </activity>
   </application>

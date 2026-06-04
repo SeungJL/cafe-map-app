@@ -1,6 +1,7 @@
 package com.about.studyaboutclubapp;
 
 import android.app.Application;
+import club.about20s.cafemap.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactHost;

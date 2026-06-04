@@ -38,20 +38,26 @@ import {
   requestNotifications,
   RESULTS,
 } from 'react-native-permissions';
+
+const APP_SCHEME = 'kagongmap';
+
 const {IntentModule} = NativeModules;
 /* ===========================
    Force Update Config
 =========================== */
 // ✅ 너가 바꿀 값
-const FORCE_UPDATE_VERSION_ANDROID = '1.3.15'; // [EDIT ME]
-const FORCE_UPDATE_VERSION_IOS = '1.1.2'; // [EDIT ME]
+// TODO: 카공지도 앱 출시 후 실제 앱 버전으로 교체
+const FORCE_UPDATE_VERSION_ANDROID = '0.0.0';
+const FORCE_UPDATE_VERSION_IOS = '0.0.0';
 
-const ANDROID_STORE_URL = 'market://details?id=com.about.studyaboutclubapp';
+// TODO: 카공지도 Play Store 등록 후 실제 패키지명으로 교체 (club.about20s.cafemap)
+const ANDROID_STORE_URL = 'market://details?id=club.about20s.cafemap';
 const ANDROID_STORE_WEB_URL =
-  'https://play.google.com/store/apps/details?id=com.about.studyaboutclubapp';
+  'https://play.google.com/store/apps/details?id=club.about20s.cafemap';
 
+// TODO: 카공지도 App Store 등록 후 실제 URL로 교체
 const IOS_STORE_URL =
-  'https://apps.apple.com/kr/app/%EC%96%B4%EB%B0%94%EC%9B%83/id6737145787';
+  'https://apps.apple.com/kr/app/%EC%B9%B4%EA%B3%B5%EC%A7%80%EB%8F%84/id0000000000';
 
 const compareSemver = (a: string, b: string) => {
   const pa = String(a || '')
@@ -110,11 +116,11 @@ const toAboutSchemeIfKakaoLink = (url: string) => {
     if (!target) return url;
 
     const decoded = safeDecode(target).replace(/^\/+/, '');
-    if (!decoded) return 'about20s://home';
+    if (!decoded) return `${APP_SCHEME}://`;
 
-    return decoded.startsWith('about20s://')
+    return decoded.startsWith(`${APP_SCHEME}://`)
       ? decoded
-      : `about20s://${decoded}`;
+      : `${APP_SCHEME}://${decoded}`;
   } catch {
     return url;
   }
@@ -137,14 +143,14 @@ const toAboutSchemeIfWebUrl = (url: string) => {
 
   if (!hostOk) return s;
 
-  // ✅ 핵심: /_open?path=... 이면 목적 path를 꺼내서 about20s://{path} 로 변환
+  // ✅ 핵심: /_open?path=... 이면 목적 path를 꺼내서 ${APP_SCHEME}://{path} 로 변환
   try {
     const u = new URL(s);
     if (u.pathname === '/_open') {
       const p = u.searchParams.get('dl') || u.searchParams.get('path');
       if (p) {
         const decoded = decodeURIComponent(p).replace(/^\/+/, '');
-        return `about20s://${decoded || 'home'}`;
+        return `${APP_SCHEME}://${decoded || 'home'}`;
       }
     }
   } catch {}
@@ -154,7 +160,7 @@ const toAboutSchemeIfWebUrl = (url: string) => {
     '',
   );
 
-  return `about20s://${withoutProto}`;
+  return `${APP_SCHEME}://${withoutProto}`;
 };
 
 const openStore = async () => {
@@ -207,7 +213,7 @@ const buildNotiKey = (rm: any) => {
    Config
 =========================== */
 const appConfig = {
-  uri: 'https://study-about.club/',
+  uri: 'https://study-about.club/cafe-map',
   agentSelector: 'about_club_app',
   pushNotificationSelector: 'about_club_app_push_notification_all',
   originWhitelist: ['intent', 'https', 'kakaolink'],
@@ -237,11 +243,11 @@ const normalizeDeeplink = (raw: unknown): string => {
 
   const unquoted = s.replace(/^['"]+|['"]+$/g, '');
 
-  if (unquoted.startsWith('/')) return `about20s://${unquoted.slice(1)}`;
-  if (unquoted.startsWith('about20s://')) return unquoted;
+  if (unquoted.startsWith('/')) return `${APP_SCHEME}://${unquoted.slice(1)}`;
+  if (unquoted.startsWith(`${APP_SCHEME}://`)) return unquoted;
 
   if (!unquoted.includes('://'))
-    return `about20s://${unquoted.replace(/^\/+/, '')}`;
+    return `${APP_SCHEME}://${unquoted.replace(/^\/+/, '')}`;
 
   return unquoted;
 };
@@ -388,10 +394,11 @@ function Section({
   const sendDeepLinkToWebView = useCallback((url: string) => {
     console.log('[RN->WV][deeplink][enter]', url); // ✅ 이 줄 추가 (match 전에)
     try {
-      // 기존 정규식보다 유연하게 수정: about20s:// 뒤에 슬래시가 몇 개든 상관없이 경로를 캡처합니다.
-      // 기존 푸시 알림(about20s://path)도 이 정규식을 100% 통과합니다.
-      const match = url.match(/about20s:\/\/?\/?([^?]+)(\?.*)?$/);
-
+      // 기존 정규식보다 유연하게 수정: ${APP_SCHEME}:// 뒤에 슬래시가 몇 개든 상관없이 경로를 캡처합니다.
+      // 기존 푸시 알림(${APP_SCHEME}://path)도 이 정규식을 100% 통과합니다.
+      const match = url.match(
+        new RegExp(`${APP_SCHEME}:\\/\\/?\\/?([^?]+)(\\?.*)?$`),
+      );
       if (!match) return;
 
       const pathAndQuery = match[1];
@@ -463,7 +470,7 @@ function Section({
         isWebViewReady,
       });
 
-      if (!normalized.startsWith('about20s://')) return;
+      if (!normalized.startsWith(`${APP_SCHEME}://`)) return;
 
       if (isWebViewReady) {
         sendDeepLinkToWebView(normalized);

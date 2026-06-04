@@ -4,6 +4,15 @@ apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 
 /* ===========================
+   ⚠️  [TODO] google-services.json 임시 상태
+   현재 google-services.json 의 package_name 은 club.about20s.cafemap 으로
+   로컬에서만 수정한 임시 값입니다.
+   → Firebase 콘솔(https://console.firebase.google.com) 에서
+     프로젝트 > 앱 추가 > Android > 패키지명 club.about20s.cafemap 으로 등록 후
+     발급받은 google-services.json 으로 교체해야 FCM/Analytics 가 정상 작동합니다.
+=========================== */
+
+/* ===========================
    ✅ [ADD] Load key.properties (release signing)
    - key.properties 가 있으면 RELEASE_* 값을 project.ext 로 주입
    - 없으면 release 서명 블록이 비어서(미서명) 빌드 단계에서만 문제나고,
@@ -43,10 +52,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.about.studyaboutclubapp"
+    namespace "club.about20s.cafemap"
 
     defaultConfig {
-        applicationId "com.about.studyaboutclubapp"
+        applicationId "club.about20s.cafemap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 166
@@ -61,16 +70,11 @@ android {
             keyPassword 'android'
         }
         release {
-            // ✅ key.properties에서 주입된 RELEASE_*를 사용
+            // key.properties → RELEASE_* 값 주입됨 (android/key.properties 기준)
+            // file() 은 app/build.gradle 기준 → android/app/ 상대경로로 해석
+            // keystore 위치: android/app/aboutclub.keystore
             if (project.hasProperty('RELEASE_STORE_FILE')) {
-                // keystore를 android/app/ 아래에 두는 기준으로 안정화
-                def ks = file("app/${RELEASE_STORE_FILE}")
-                if (!ks.exists()) {
-                    // 혹시 기존처럼 경로가 이미 포함되어 있다면 fallback
-                    ks = file(RELEASE_STORE_FILE)
-                }
-
-                storeFile ks
+                storeFile file(RELEASE_STORE_FILE)
                 storePassword RELEASE_STORE_PASSWORD
                 keyAlias RELEASE_KEY_ALIAS
                 keyPassword RELEASE_KEY_PASSWORD

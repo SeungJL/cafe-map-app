@@ -1,4 +1,4 @@
-// !$*UTF8*$!
+﻿// !$*UTF8*$!
 {
 	archiveVersion = 1;
 	classes = {
@@ -489,7 +489,7 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "어바웃/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "어바웃";
+				INFOPLIST_KEY_CFBundleDisplayName = "카공지도";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -497,7 +497,7 @@
 				);
 				MARKETING_VERSION = 1.1.2;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.about.studyaboutapp;
+				PRODUCT_BUNDLE_IDENTIFIER = club.about20s.cafemap;
 				PRODUCT_NAME = "어바웃";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -516,7 +516,7 @@
 				DEVELOPMENT_TEAM = 38Y2U9AM86;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "어바웃/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "어바웃";
+				INFOPLIST_KEY_CFBundleDisplayName = "카공지도";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -524,7 +524,7 @@
 				);
 				MARKETING_VERSION = 1.1.2;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.about.studyaboutapp;
+				PRODUCT_BUNDLE_IDENTIFIER = club.about20s.cafemap;
 				PRODUCT_NAME = "어바웃";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
