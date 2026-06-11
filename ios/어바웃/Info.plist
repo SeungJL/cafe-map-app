@@ -40,19 +40,16 @@
     </dict>
 
     <key>NSCameraUsageDescription</key>
-    <string>프로필 사진 촬영을 위해 카메라 권한이 필요합니다.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>지도 내 위치 확인을 위해서 위치 권한이 필요합니다.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>지도 내 위치 확인을 위해서 위치 권한이 필요합니다.</string>
+    <string>프로필 사진 촬영 기능을 제공하기 위해 카메라를 사용합니다.</string>
+
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>지도 내 위치 확인을 위해서 위치 권한이 필요합니다.</string>
-    <key>NSMotionUsageDescription</key>
-    <string>지도 내 위치 확인을 위해서 위치 권한이 필요합니다.</string>
+    <string>현재 위치를 기준으로 주변의 공부하기 좋은 카페를 지도에 표시하고 가까운 카페를 찾을 수 있도록 위치 정보를 사용합니다.</string>
+
     <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>프로필 사진 선택을 위해 라이브러리 접근 권한이 필요합니다.</string>
+    <string>프로필 사진을 저장하기 위해 사진 보관함 접근 권한을 사용합니다.</string>
+
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>프로필 사진 선택을 위해 라이브러리 접근 권한이 필요합니다.</string>
+    <string>프로필 사진을 선택하고 등록할 수 있도록 사진 보관함 접근 권한을 사용합니다.</string>
 
     <key>UIBackgroundModes</key>
     <array>
@@ -76,16 +73,19 @@
 
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
+
     <key>UIRequiredDeviceCapabilities</key>
     <array>
         <string>armv7</string>
     </array>
+
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
 </dict>
