@@ -58,8 +58,8 @@ android {
         applicationId "club.about20s.cafemap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 168
-        versionName "1.3.38"
+        versionCode 169
+        versionName "1.3.39"
     }
 
     signingConfigs {
