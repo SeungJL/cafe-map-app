@@ -886,6 +886,9 @@ function Section({
       userAgent={appConfig.agentSelector}
       originWhitelist={appConfig.originWhitelist}
       webviewDebuggingEnabled={__DEV__}
+      // Android 전용. 기본값이 false라 켜지 않으면 WebView 안의
+      // getCurrentPosition()이 권한 프롬프트도 없이 PERMISSION_DENIED로 즉시 실패한다.
+      geolocationEnabled
       bounces={false}
       startInLoadingState
       showsVerticalScrollIndicator={false}
