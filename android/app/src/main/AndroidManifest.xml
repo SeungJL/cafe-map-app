@@ -16,11 +16,19 @@
   <uses-feature android:name="android.hardware.location.gps" android:required="false" />
   <uses-feature android:name="android.hardware.location.network" android:required="false" />
 
+  <!--
+    enableOnBackInvokedCallback: targetSdk 36(Android 16)부터 이 값의 기본이 true로 바뀌어
+    predictive back이 켜지고, 그러면 레거시 back 디스패치(onBackPressed/KEYCODE_BACK)가 더 이상
+    호출되지 않는다. React Native의 BackHandler가 그 경로에 의존하므로 hardwareBackPress가
+    아예 뜨지 않아, 웹뷰로 backAction 메시지를 보내는 코드가 실행되지 않는다(뒤로가기 먹통).
+    어바웃 앱은 targetSdk 35라 기본이 false여서 정상 동작한다. 명시적으로 꺼서 동작을 맞춘다.
+  -->
   <application
     android:name=".MainApplication"
     android:label="@string/app_name"
     android:icon="@mipmap/ic_launcher"
     android:allowBackup="false"
+    android:enableOnBackInvokedCallback="false"
     android:theme="@style/AppTheme">
 
     <!-- ... 생략(기존 그대로) ... -->
