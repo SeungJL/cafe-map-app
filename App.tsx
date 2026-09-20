@@ -50,14 +50,13 @@ const {IntentModule} = NativeModules;
 const FORCE_UPDATE_VERSION_ANDROID = '0.0.0';
 const FORCE_UPDATE_VERSION_IOS = '0.0.0';
 
-// TODO: 카공지도 Play Store 등록 후 실제 패키지명으로 교체 (club.about20s.cafemap)
 const ANDROID_STORE_URL = 'market://details?id=club.about20s.cafemap';
 const ANDROID_STORE_WEB_URL =
   'https://play.google.com/store/apps/details?id=club.about20s.cafemap';
 
-// TODO: 카공지도 App Store 등록 후 실제 URL로 교체
-const IOS_STORE_URL =
-  'https://apps.apple.com/kr/app/%EC%B9%B4%EA%B3%B5%EC%A7%80%EB%8F%84/id0000000000';
+// 어바웃 웹의 카공지도 설치 링크와 같은 앱을 가리켜야 한다
+// (About/features/cafeMap/screens/CafeMapAppInstallDrawer.tsx의 IOS_APP_STORE_URL).
+const IOS_STORE_URL = 'https://apps.apple.com/kr/app/id6776977905';
 
 const compareSemver = (a: string, b: string) => {
   const pa = String(a || '')
@@ -227,6 +226,11 @@ const appConfig = {
 const shouldAllowGesture = (url: string): boolean => {
   if (!url) return true;
   const urlFirst = url.split('?')[0];
+
+  // 카공지도의 시작 화면(appConfig.uri). 탭은 ?tab= 쿼리로만 갈리고 router.replace로 갈아끼워서
+  // 히스토리가 없기 때문에, 여기서 iOS 스와이프 백을 허용하면 이전 탭이 아니라 웹뷰 히스토리
+  // 밖으로 빠져나가 빈 화면이 된다. 안드로이드 하드웨어 백(backAction)과 동작을 맞춘다.
+  if (urlFirst === 'https://study-about.club/cafe-map') return false;
 
   if (urlFirst === 'https://study-about.club/home') return false;
   if (urlFirst === 'https://study-about.club/studyPage') return false;
